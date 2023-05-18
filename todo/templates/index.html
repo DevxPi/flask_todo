@@ -1,59 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Todo App</title>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
-</head>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.css"
+      integrity="sha256-cDGQ39yChhpN5vzgHbjIdGEtQ5kXE9tttCsI7VR9TuY="
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://code.jquery.com/jquery-3.1.1.min.js"
+      integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.js"
+      integrity="sha256-fN8vcX2ULyTDspVTHEteK8hd3rQAb5thNiwakjAW75Q="
+      crossorigin="anonymous"
+    ></script>
+  </head>
 
-<body>
-    <div style="margin-top: 50px;" class="ui container">
-        <h1 class="ui center aligned header">To Do App</h1>
-        {% if form.todo_title.errors %}
-            <ul class="errors">
-            {% for error in form.todo_title.errors %}
-                <li>{{ error }}</li>
-            {% endfor %}
-            </ul>
-        {% endif %}
-        <form class="ui form" action="/" method="post">
-            <div class="field">
-                <label>Todo Title</label>
-                {{ form.hidden_tag() }}
-                {{ form.todo_title(size=20) }}
-            </div>
-            <button class="ui blue button" type="submit">Add</button>
-        </form>
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <ul class=flashes>
-            {% for message in messages %}
-            <li>{{ message }}</li>
-            {% endfor %}
-            </ul>
-        {% endif %}
-        {% endwith %}
-        <hr>
-
-        {% for todo in todo_list %}
-        <div class="ui segment">
-            <p class="ui big header">{{todo.id }} | {{ todo.title }}</p>
-
-            {% if todo.complete == False %}
-            <span class="ui gray label">Not Complete</span>
-            {% else %}
-            <span class="ui green label">Completed</span>
-            {% endif %}
-
-            <a class="ui blue button" href="/update/{{ todo.id }}">Update</a>
-            <a class="ui red button" href="/delete/{{ todo.id }}">Delete</a>
-        </div>
+  <body>
+    <div style="margin-top: 50px" class="ui container">
+      <h1 class="ui center aligned header">To Do App</h1>
+      {% if form.todo_title.errors %}
+      <ul class="errors">
+        {% for error in form.todo_title.errors %}
+        <li>{{ error }}</li>
         {% endfor %}
-    </div>
-</body>
+      </ul>
+      {% endif %}
+      <form class="ui form" action="/" method="post">
+        <div class="inline fields">
+          <div class="sixteen wide field">
+            <label>Title</label>
+            {{ form.hidden_tag() }} {{ form.todo_title(size=20) }}
+          </div>
+          <div class="field">
+            <button class="ui blue button" type="submit">Add</button>
+          </div>
+        </div>
+      </form>
+      {% with messages = get_flashed_messages() %} {% if messages %}
+      <div
+        class="ui success message flashes"
+        data-dismissable="true"
+        data-duration="3500"
+      >
+        {% for message in messages %}
+        <p>{{ message }}</p>
+        {% endfor %}
+      </div>
+      {% endif %} {% endwith %}
+      <hr />
 
+      {% for todo in todo_list %}
+      <div class="ui segment">
+        <p class="ui big header">{{todo.id }} | {{ todo.title }}</p>
+
+        {% if todo.complete == False %}
+        <span class="ui gray label">Not Complete</span>
+        {% else %}
+        <span class="ui green label">Completed</span>
+        {% endif %}
+
+        <a class="ui blue button" href="/update/{{ todo.id }}">Update</a>
+        <a class="ui red button" href="/delete/{{ todo.id }}">Delete</a>
+      </div>
+      {% endfor %}
+      <div class="ui success message">
+        <div class="header">New Site Features</div>
+        <ul class="list">
+          <li>You can now add, delete and update on complete todo</li>
+          <li>
+            Feel free to contact if you want donate some money. just kidding!
+          </li>
+        </ul>
+      </div>
+    </div>
+    <script>
+      $('.message[data-dismissable="true"]').each(function () {
+        var duration = $(this).data("duration");
+        setTimeout(
+          function () {
+            $(this).transition("fade");
+          }.bind(this),
+          duration
+        );
+      });
+    </script>
+  </body>
 </html>
