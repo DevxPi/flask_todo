@@ -4,6 +4,8 @@ from flask_sqlalchemy import SQLAlchemy
 from os import environ, path
 from dotenv import load_dotenv
 
+from forms import TodoForm
+
 BASEDIR = path.abspath(path.dirname(__file__))
 load_dotenv(path.join(BASEDIR, ".env"))
 
@@ -28,24 +30,21 @@ class Todo(db.Model):
 """Route """
 
 
-@app.route("/")
+@app.route("/", methods=("GET", "POST"))
 def index():
+    form = TodoForm()
+
+    if request.method == "POST":
+        if form.validate_on_submit():
+            new_todo = Todo(title=form.todo_title.data, complete=False)
+            db.session.add(new_todo)
+            db.session.commit()
+            flash("New data added...")
+
+            return redirect(url_for("index"))
+
     todo_list = Todo.query.all()
-    return render_template("index.html", todo_list=todo_list)
-
-
-"""Create add method to add data"""
-
-
-@app.route("/add", methods=["POST"])
-def add():
-    title = request.form.get("title")
-    new_todo = Todo(title=title, complete=False)
-    db.session.add(new_todo)
-    db.session.commit()
-    flash("New data added...")
-
-    return redirect(url_for("index"))
+    return render_template("index.html", todo_list=todo_list, form=form)
 
 
 """Update method for update existing data"""

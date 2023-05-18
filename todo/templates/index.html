@@ -13,11 +13,18 @@
 <body>
     <div style="margin-top: 50px;" class="ui container">
         <h1 class="ui center aligned header">To Do App</h1>
-
-        <form class="ui form" action="/add" method="post">
+        {% if form.todo_title.errors %}
+            <ul class="errors">
+            {% for error in form.todo_title.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+        <form class="ui form" action="/" method="post">
             <div class="field">
                 <label>Todo Title</label>
-                <input type="text" name="title" placeholder="Enter Todo..."><br>
+                {{ form.hidden_tag() }}
+                {{ form.todo_title(size=20) }}
             </div>
             <button class="ui blue button" type="submit">Add</button>
         </form>
